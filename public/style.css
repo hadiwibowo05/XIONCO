@@ -1,0 +1,99 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 20px;
+  padding: 0;
+}
+h1, h2 {
+  color: #333;
+}
+form, ul {
+  margin-bottom: 20px;
+}
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+button:hover {
+  background-color: #0056b3;
+}
+input, select {
+  padding: 5px;
+  margin-right: 10px;
+}
+#response {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+
+// views/index.ejs
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Toko</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Daftar Produk</h1>
+  <form action="/beli" method="POST">
+    <select name="produk_id">
+      <% products.forEach(p => { %>
+        <option value="<%= p.id %>"><%= p.nama %> (Stok: <%= p.stok %>)</option>
+      <% }) %>
+    </select>
+    <input type="number" name="jumlah" min="1" required />
+    <button type="submit">Beli</button>
+  </form>
+
+  <h2>Data Pembelian</h2>
+  <ul>
+    <% pembelian.forEach(p => { %>
+      <li>
+        <%= p.nama %> - <%= p.jumlah %> pcs
+        <form action="/cancel/<%= p.id %>" method="POST" style="display:inline">
+          <button type="submit">Cancel</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+
+  <a href="/chatbot">Buka Chatbot</a>
+</body>
+</html>
+
+// views/chatbot.ejs
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>Chatbot AI</h1>
+  <form id="chatForm">
+    <input type="text" id="message" placeholder="Tanyakan sesuatu..." required />
+    <button type="submit">Kirim</button>
+  </form>
+  <div id="response"></div>
+
+  <script>
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = document.getElementById('message').value;
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      document.getElementById('response').innerText = data.response;
+    });
+  </script>
+</body>
+</html>

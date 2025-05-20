@@ -1,0 +1,23 @@
+!DOCTYPE html
+html
+head
+  Admin TokoAlit
+head
+body
+  h1Daftar Produkh1
+  form action=beli method=POST
+    select name=produk_id
+      % products.forEach(p = { %
+        option value=%= p.id %%= p.nama %option
+      % }) %
+    select
+    input type=number name=jumlah min=1 required 
+    button type=submitBelibutton
+  form
+
+  h2Pembatalanh2
+  ul
+    %  Tambahkan tampilan pembelian jika perlu %
+  ul
+body
+html
